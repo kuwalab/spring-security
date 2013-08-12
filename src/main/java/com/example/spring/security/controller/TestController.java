@@ -10,4 +10,14 @@ public class TestController {
 	public String index() {
 		return "test/index";
 	}
+
+	@RequestMapping("/user1")
+	public String user1() {
+		return "test/user1";
+	}
+
+	@RequestMapping("/user2")
+	public String user2() {
+		return "test/user2";
+	}
 }

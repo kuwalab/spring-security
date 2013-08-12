@@ -88,4 +88,16 @@ public class TestControllerTest {
 				.andExpect(status().isFound())
 				.andExpect(redirectedUrl("http://localhost/login"));
 	}
+
+	@Test
+	public void shash_loginへアクセス後ログイン() throws Exception {
+		mockMvc.perform(get("/login").session(session)).andExpect(
+				status().isOk());
+		// リダイレクトは、/test/user1になる
+		mockMvc.perform(
+				post("/j_spring_security_check").param("j_username", "user1")
+						.param("j_password", "user1").session(session))
+				.andExpect(status().isFound())
+				.andExpect(redirectedUrl("/test/user1"));
+	}
 }
