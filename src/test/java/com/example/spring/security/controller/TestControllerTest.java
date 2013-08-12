@@ -70,6 +70,15 @@ public class TestControllerTest {
 	}
 
 	@Test
+	public void 認証の失敗() throws Exception {
+		mockMvc.perform(
+				post("/j_spring_security_check").param("j_username", "user1")
+						.param("j_password", "user2").session(session))
+				.andExpect(status().isFound())
+				.andExpect(redirectedUrl("/login/error"));
+	}
+
+	@Test
 	public void shash_testへアクセス後ログインしログアウト後に再度testへアクセス() throws Exception {
 		mockMvc.perform(get("/test/").session(session))
 				.andExpect(status().isFound())
