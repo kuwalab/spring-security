@@ -15,10 +15,19 @@ http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
  <authentication-manager alias="authenticationManager">
   <authentication-provider>
    <user-service>
-    <user name="user1" password="user1" authorities="ROLE_USER1" />
-    <user name="user2" password="user2" authorities="ROLE_USER2" />
-    <user name="admin" password="admin" authorities="ROLE_USER1,ROLE_USER2" />
+    <user name="user1" password="ca027a2a4e2f589438fffbf177fda636c1078b1b84a1c7f851df34b7488b1169" authorities="ROLE_USER1" />
+    <user name="user2" password="c421cda1933f73eb385460bfbb6a574c0de29a5fd82cee0e1d46445b863f9b63" authorities="ROLE_USER2" />
+    <user name="admin" password="16cad0e61203815a06ffa22f2c536e9a9de15040e33e2afa381e494c310ee04e" authorities="ROLE_USER1,ROLE_USER2" />
    </user-service>
+   <password-encoder ref="shaPasswordEncoder">
+    <salt-source user-property="username" />
+   </password-encoder>
   </authentication-provider>
  </authentication-manager>
+
+ <beans:bean id="shaPasswordEncoder"
+  class="org.springframework.security.authentication.encoding.ShaPasswordEncoder">
+  <beans:constructor-arg value="256" />
+  <beans:property name="iterations" value="10000" />
+ </beans:bean>
 </beans:beans>
