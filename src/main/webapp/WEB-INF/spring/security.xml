@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans:beans xmlns="http://www.springframework.org/schema/security"
- xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns:beans="http://www.springframework.org/schema/beans" xmlns:util="http://www.springframework.org/schema/util"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
  xsi:schemaLocation="http://www.springframework.org/schema/security
 http://www.springframework.org/schema/security/spring-security-3.1.xsd
 http://www.springframework.org/schema/beans
-http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+http://www.springframework.org/schema/util
+http://www.springframework.org/schema/util/spring-util-3.2.xsd">
  <http pattern="/login/**" security="none" />
  <http>
   <intercept-url pattern="/**" access="IS_AUTHENTICATED_FULLY" />
@@ -13,18 +16,20 @@ http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
   <logout logout-url="/logout" />
  </http>
  <authentication-manager alias="authenticationManager">
-  <authentication-provider>
-   <user-service>
-    <user name="user1" password="ca027a2a4e2f589438fffbf177fda636c1078b1b84a1c7f851df34b7488b1169" authorities="ROLE_USER1" />
-    <user name="user2" password="c421cda1933f73eb385460bfbb6a574c0de29a5fd82cee0e1d46445b863f9b63" authorities="ROLE_USER2" />
-    <user name="admin" password="16cad0e61203815a06ffa22f2c536e9a9de15040e33e2afa381e494c310ee04e" authorities="ROLE_USER1,ROLE_USER2" />
-   </user-service>
+  <authentication-provider user-service-ref="inMemoryUserDetailsManager">
    <password-encoder ref="shaPasswordEncoder">
     <salt-source user-property="username" />
    </password-encoder>
   </authentication-provider>
  </authentication-manager>
-
+ 
+ <util:properties id="userList" location="classpath:userList.properties" />
+ <beans:bean id="inMemoryUserDetailsManager"
+  class="org.springframework.security.provisioning.InMemoryUserDetailsManager">
+  <beans:constructor-arg>
+   <beans:ref bean="userList" />
+  </beans:constructor-arg>
+ </beans:bean>
  <beans:bean id="shaPasswordEncoder"
   class="org.springframework.security.authentication.encoding.ShaPasswordEncoder">
   <beans:constructor-arg value="256" />
