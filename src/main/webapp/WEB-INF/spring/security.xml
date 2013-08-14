@@ -17,12 +17,12 @@ http://www.springframework.org/schema/util/spring-util-3.2.xsd">
  </http>
  <authentication-manager alias="authenticationManager">
   <authentication-provider user-service-ref="inMemoryUserDetailsManager">
-   <password-encoder ref="shaPasswordEncoder">
+   <password-encoder ref="customPasswordEncoder">
     <salt-source user-property="username" />
    </password-encoder>
   </authentication-provider>
  </authentication-manager>
- 
+
  <util:properties id="userList" location="classpath:userList.properties" />
  <beans:bean id="inMemoryUserDetailsManager"
   class="org.springframework.security.provisioning.InMemoryUserDetailsManager">
@@ -30,9 +30,10 @@ http://www.springframework.org/schema/util/spring-util-3.2.xsd">
    <beans:ref bean="userList" />
   </beans:constructor-arg>
  </beans:bean>
- <beans:bean id="shaPasswordEncoder"
-  class="org.springframework.security.authentication.encoding.ShaPasswordEncoder">
-  <beans:constructor-arg value="256" />
-  <beans:property name="iterations" value="10000" />
+ <beans:bean id="customPasswordEncoder"
+  class="com.example.spring.security.CustomPasswordEncoder">
+  <beans:property name="currentVersion">
+   <beans:value>2</beans:value>
+  </beans:property>
  </beans:bean>
 </beans:beans>
