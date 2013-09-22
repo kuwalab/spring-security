@@ -9,10 +9,12 @@ http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
 http://www.springframework.org/schema/util
 http://www.springframework.org/schema/util/spring-util-3.2.xsd">
  <http pattern="/login/**" security="none" />
+ <beans:bean id="customAuthenticationSuccessHandler"
+  class="com.example.spring.security.CustomAuthenticationSuccessHandler" />
  <http>
   <intercept-url pattern="/**" access="IS_AUTHENTICATED_FULLY" />
   <form-login login-page="/login" authentication-failure-url="/login/error"
-   default-target-url="/test/user1" />
+   default-target-url="/test/user1" authentication-success-handler-ref="customAuthenticationSuccessHandler" />
   <logout logout-url="/logout" />
  </http>
  <authentication-manager alias="authenticationManager">

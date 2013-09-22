@@ -63,10 +63,10 @@ public class TestControllerTest {
 				.andExpect(redirectedUrl("http://localhost/login"));
 		// リダイレクトは、最初にアクセスした、/test/になる
 		mockMvc.perform(
-				post("/j_spring_security_check").param("j_username", "user1")
-						.param("j_password", "user1").session(session))
+				post("/j_spring_security_check").param("j_username", "user2")
+						.param("j_password", "user2").session(session))
 				.andExpect(status().isFound())
-				.andExpect(redirectedUrl("http://localhost/test/"));
+				.andExpect(redirectedUrl("/test/user2"));
 	}
 
 	@Test
@@ -88,7 +88,7 @@ public class TestControllerTest {
 				post("/j_spring_security_check").param("j_username", "user1")
 						.param("j_password", "user1").session(session))
 				.andExpect(status().isFound())
-				.andExpect(redirectedUrl("http://localhost/test/"));
+				.andExpect(redirectedUrl("/test/user1"));
 		// ルートに飛ばされる
 		mockMvc.perform(get("/logout").session(session))
 				.andExpect(status().isFound()).andExpect(redirectedUrl("/"));
@@ -99,7 +99,19 @@ public class TestControllerTest {
 	}
 
 	@Test
-	public void shash_loginへアクセス後ログイン() throws Exception {
+	public void shash_loginへアクセス後ログイン_admin() throws Exception {
+		mockMvc.perform(get("/login").session(session)).andExpect(
+				status().isOk());
+		// リダイレクトは、/test/user1になる
+		mockMvc.perform(
+				post("/j_spring_security_check").param("j_username", "admin")
+						.param("j_password", "admin").session(session))
+				.andExpect(status().isFound())
+				.andExpect(redirectedUrl("/test/index"));
+	}
+
+	@Test
+	public void shash_loginへアクセス後ログイン_user1() throws Exception {
 		mockMvc.perform(get("/login").session(session)).andExpect(
 				status().isOk());
 		// リダイレクトは、/test/user1になる
@@ -108,5 +120,17 @@ public class TestControllerTest {
 						.param("j_password", "user1").session(session))
 				.andExpect(status().isFound())
 				.andExpect(redirectedUrl("/test/user1"));
+	}
+
+	@Test
+	public void shash_loginへアクセス後ログイン_user2() throws Exception {
+		mockMvc.perform(get("/login").session(session)).andExpect(
+				status().isOk());
+		// リダイレクトは、/test/user1になる
+		mockMvc.perform(
+				post("/j_spring_security_check").param("j_username", "user2")
+						.param("j_password", "user2").session(session))
+				.andExpect(status().isFound())
+				.andExpect(redirectedUrl("/test/user2"));
 	}
 }
